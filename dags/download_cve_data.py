@@ -1,6 +1,10 @@
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
 import requests
 import csv
 from collections import namedtuple
+from datetime import datetime, timedelta
+
 
 def get_cve_json(vendor, product):
     r = requests.get(f'http://cve.circl.lu/api/search/{vendor}/{product}')
@@ -32,5 +36,7 @@ def get_product_cves():
     cve_data_to_csv(combined_results)
 
 
-if __name__ == "__main__":
-    get_product_cves()
+with DAG('export_cve_data', description='Export CVE data', schedule_interval='@once', start_date=datetime.now() - timedelta(hours=24)) as dag:
+    export_task = PythonOperator(task_id='export_task', python_callable=get_product_cves)
+
+export_task
