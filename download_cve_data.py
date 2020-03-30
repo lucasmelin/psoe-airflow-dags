@@ -9,7 +9,7 @@ import sys
 import uuid
 from azure.storage.blob import BlockBlobService, PublicAccess
 from airflow.hooks.base_hook import BaseHook
-
+import logging
 
 def get_cve_json(vendor, product):
     r = requests.get(f'http://cve.circl.lu/api/search/{vendor}/{product}')
@@ -57,18 +57,12 @@ def csv_upload_to_blob():
         full_path_to_file = os.path.join(local_path, local_file_name)
 
         # Upload file
-        print("Got file: " + full_path_to_file)
-        print("\nUploading to Blob storage as " + local_file_name)
+        logging.error("Got file: " + full_path_to_file)
+        logging.error("\nUploading to Blob storage as " + local_file_name)
         block_blob_service.create_blob_from_path(container_name, local_file_name, full_path_to_file)
 
-        #sys.stdout.write("Hit any key to cleanup")
-        #sys.stdout.flush()
-        #input()
-        # Clean up
-        #block_blob_service.delete_container(container_name)
-        #os.remove(full_path_to_file)
     except Exception as e:
-        print(e)
+        logging.error(e)
 
 
 
