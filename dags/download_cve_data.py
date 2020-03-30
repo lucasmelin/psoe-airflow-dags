@@ -4,6 +4,11 @@ import requests
 import csv
 from collections import namedtuple
 from datetime import datetime, timedelta
+import os
+import sys
+import uuid
+from azure.storage.blob import BlockBlobService, PublicAccess
+from airflow.hooks.base_hook import BaseHook
 
 
 def get_cve_json(vendor, product):
@@ -36,7 +41,39 @@ def get_product_cves():
     cve_data_to_csv(combined_results)
 
 
+def csv_upload_to_blob():
+    try:
+        connection = BaseHook.get_connection("psoe_blue_sky")
+        # Access Storage Account
+        block_blob_service = BlockBlobService(account_name=connection.login, account_key=connection.password)
+        # Create Container
+        container_name = "thevuncsvblob"
+        block_blob_service.create_container(container_name)
+        block_blob_service.set_container_acl(container_name, public_access=PublicAccess.Container)
+
+        # Get CSV File
+        local_path = os.path.abspath(os.path.curdir)
+        local_file_name = "cve_data.csv"
+        full_path_to_file = os.path.join(local_path, local_file_name)
+
+        # Upload file
+        print("Got file: " + full_path_to_file)
+        print("\nUploading to Blob storage as " + local_file_name)
+        block_blob_service.create_blob_from_path(container_name, local_file_name, full_path_to_file)
+
+        #sys.stdout.write("Hit any key to cleanup")
+        #sys.stdout.flush()
+        #input()
+        # Clean up
+        #block_blob_service.delete_container(container_name)
+        #os.remove(full_path_to_file)
+    except Exception as e:
+        print(e)
+
+
+
 with DAG('export_cve_data', description='Export CVE data', schedule_interval='@once', start_date=datetime.now() - timedelta(hours=24)) as dag:
     export_task = PythonOperator(task_id='export_task', python_callable=get_product_cves)
+    save_to_blob_storage = PythonOperator(task_id='save_to_blob_storage', python_callable=csv_upload_to_blob)
 
-export_task
+export_task >> save_to_blob_storage
