@@ -52,7 +52,7 @@ def csv_upload_to_blob():
         block_blob_service.set_container_acl(container_name, public_access=PublicAccess.Container)
 
         # Get CSV File
-        local_path = os.path.abspath(os.path.curdir)
+        local_path = os.path.abspath(os.path.join(os.path.curdir, os.pardir))
         local_file_name = "cve_data.csv"
         full_path_to_file = os.path.join(local_path, local_file_name)
 
