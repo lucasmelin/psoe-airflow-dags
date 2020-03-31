@@ -65,9 +65,7 @@ def csv_upload_to_blob():
         logging.error(e)
 
 
-
 with DAG('export_cve_data', description='Export CVE data', schedule_interval='@once', start_date=datetime.now() - timedelta(hours=24)) as dag:
     export_task = PythonOperator(task_id='export_task', python_callable=get_product_cves)
-    save_to_blob_storage = PythonOperator(task_id='save_to_blob_storage', python_callable=csv_upload_to_blob)
 
-export_task >> save_to_blob_storage
+export_task
