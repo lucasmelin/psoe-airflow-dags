@@ -19,7 +19,7 @@ def create_dag(dag_id,
 
     def concatenate_values(*args):
         lst = []
-        for i in range(1000000):
+        for i in range(100000):
             lst.append('x')
 
     dag = DAG(dag_id,
@@ -36,7 +36,7 @@ def create_dag(dag_id,
 
 
 # build a dag for each number in range(4)
-for n in range(1, 4):
+for n in range(1, 11):
     dag_id = 'concatenator_{}'.format(str(n))
 
     default_args = {'owner': 'airflow',
