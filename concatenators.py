@@ -19,7 +19,7 @@ def create_dag(dag_id,
 
     def concatenate_values(*args):
         lst = []
-        for i in range(100000):
+        for i in range(1000000):
             lst.append('x')
 
     dag = DAG(dag_id,
