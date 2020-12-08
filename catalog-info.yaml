@@ -3,6 +3,8 @@ kind: Component
 metadata:
   name: "psoe-airflow-dags"
   description: "Airflow DAGs built for PSOE Blue Sky Experiment"
+  tags:
+    - python
   annotations:
     github.com/project-slug: "lucasmelin/psoe-airflow-dags"
 spec:
