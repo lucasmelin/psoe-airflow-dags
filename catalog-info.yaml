@@ -6,6 +6,6 @@ metadata:
   annotations:
     github.com/project-slug: "lucasmelin/psoe-airflow-dags"
 spec:
-  type: documentation
+  type: service
   lifecycle: experimental
   owner: "lucasmelin"
