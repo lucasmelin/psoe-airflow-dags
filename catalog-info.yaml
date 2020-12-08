@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "psoe-airflow-dags"
+  description: "Airflow DAGs built for PSOE Blue Sky Experiment"
+  annotations:
+    github.com/project-slug: "lucasmelin/psoe-airflow-dags"
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: "lucasmelin"
