@@ -1,13 +1,14 @@
+import csv
+import logging
+import os
+from collections import namedtuple
+from datetime import datetime, timedelta
+
+import requests
 from airflow import DAG
 from airflow.hooks.base_hook import BaseHook
 from airflow.operators.python_operator import PythonOperator
 from azure.storage.blob import BlockBlobService, PublicAccess
-from collections import namedtuple
-import csv
-from datetime import datetime, timedelta
-import logging
-import os
-import requests
 
 
 def get_cve_json(vendor, product):
