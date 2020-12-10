@@ -1,9 +1,6 @@
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
-import csv
-from datetime import datetime, timedelta
-from airflow.hooks.base_hook import BaseHook
-import logging
+from datetime import datetime
 
 
 def create_dag(dag_id, schedule, dag_number, default_args):
@@ -15,7 +12,7 @@ def create_dag(dag_id, schedule, dag_number, default_args):
     dag = DAG(dag_id, schedule_interval=schedule, default_args=default_args)
 
     with dag:
-        t1 = PythonOperator(
+        PythonOperator(
             task_id="concatenator",
             python_callable=concatenate_values,
             dag_number=dag_number,
